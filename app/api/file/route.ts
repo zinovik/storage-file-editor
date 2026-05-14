@@ -25,6 +25,13 @@ export const GET = async (request: Request) => {
     if (!selectedBucket && user.allowedBuckets.length === 0)
         return NextResponse.json({ buckets: [], filenames: [], file: '' });
 
+    if (selectedBucket && !user.allowedBuckets.includes(selectedBucket)) {
+        return NextResponse.json(
+            { error: 'Bucket not allowed' },
+            { status: 403 }
+        );
+    }
+
     const currentBucket = selectedBucket || user.allowedBuckets[0];
 
     let filenames;
@@ -76,11 +83,7 @@ export const POST = async (request: Request) => {
 
     const json = JSON.parse(await request.text());
 
-    const url = await saveFile(
-        selectedBucket,
-        selectedFilename!,
-        json.file
-    );
+    const url = await saveFile(selectedBucket, selectedFilename!, json.file);
 
     return NextResponse.json({ message: 'File saved successfully', url });
 };
