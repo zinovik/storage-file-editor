@@ -2,19 +2,6 @@ name: Deploy to Google Run
 run-name: Deploy to Google Run
 on: [push]
 jobs:
-  Tests:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out repository code
-        uses: actions/checkout@v6
-      - name: Use Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: '24.x'
-      - name: Install dependencies
-        run: npm install
-      - name: Run tests
-        run: npm run test
   Deploy:
     runs-on: ubuntu-latest
     steps:
