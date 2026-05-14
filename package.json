@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "build:cloud": "gcloud builds submit --tag europe-central2-docker.pkg.dev/zinovik-project/zinovik-repository/storage-file-editor-api --region=europe-west1 --project zinovik-project",
-    "deploy": "gcloud run deploy storage-file-editor-api --image europe-central2-docker.pkg.dev/zinovik-project/zinovik-repository/storage-file-editor-api:latest --platform managed --region europe-central2 --allow-unauthenticated --project zinovik-project --set-env-vars NEXTAUTH_URL=https://test.com,GOOGLE_CLIENT_ID=306312319198-u9h4e07khciuet8hnj00b8fvmq25rlj0.apps.googleusercontent.com --set-secrets=NEXTAUTH_SECRET=storage-file-editor-nextauth-secret,GOOGLE_CLIENT_SECRET=storage-file-editor-google-client-secret:latest --service-account=storage-file-editor@zinovik-project.iam.gserviceaccount.com"
+    "deploy": "gcloud run deploy storage-file-editor-api --image europe-central2-docker.pkg.dev/zinovik-project/zinovik-repository/storage-file-editor-api:latest --platform managed --region europe-central2 --allow-unauthenticated --project zinovik-project --set-env-vars NEXTAUTH_URL=https://test.com,GOOGLE_CLIENT_ID=306312319198-u9h4e07khciuet8hnj00b8fvmq25rlj0.apps.googleusercontent.com --set-secrets=NEXTAUTH_SECRET=storage-file-editor-nextauth-secret:latest,GOOGLE_CLIENT_SECRET=storage-file-editor-google-client-secret:latest --service-account=storage-file-editor@zinovik-project.iam.gserviceaccount.com"
   },
   "dependencies": {
     "@google-cloud/storage": "7.19.0",
