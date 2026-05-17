@@ -1,6 +1,5 @@
 'use client';
 
-import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 
 type FileResponse = {
@@ -17,29 +16,18 @@ const formatFile = (raw: string) => {
     }
 };
 
-export function Editor() {
-    const { data: session } = useSession();
-
+export function Editor({ username }: { username: string }) {
     const [isLoading, setIsLoading] = useState(true);
     const [buckets, setBuckets] = useState<string[]>([]);
     const [filenames, setFilenames] = useState<string[]>([]);
     const [file, setFile] = useState('');
     const [selectedBucket, setSelectedBucket] = useState('');
     const [selectedFilename, setSelectedFilename] = useState('');
-    const [isDefaultFileFetched, setAlreadyFetchedDefaultFile] =
-        useState(false);
+    const [needUpdate, setNeedUpdate] = useState(true);
 
     useEffect(() => {
         const updateState = async () => {
-            if (!session) return;
-
-            if (isDefaultFileFetched) {
-                // we get here because we change selectedFilename after fetching the default file
-                setAlreadyFetchedDefaultFile(false);
-                return;
-            }
-
-            if (selectedFilename === '') setAlreadyFetchedDefaultFile(true);
+            setNeedUpdate(false);
 
             setIsLoading(true);
 
@@ -68,7 +56,7 @@ export function Editor() {
         };
 
         updateState();
-    }, [session, selectedBucket, selectedFilename]);
+    }, [needUpdate]);
 
     const saveFile = async () => {
         setIsLoading(true);
@@ -88,20 +76,11 @@ export function Editor() {
         alert(data.message);
     };
 
-    if (!session) {
-        return (
-            <div className="rounded-md border border-slate-200 bg-slate-50 p-4 text-slate-700">
-                Please sign in to view and edit files.
-            </div>
-        );
-    }
-
     return (
         <div className="flex flex-col lg:flex-row gap-6 flex-1 w-full min-h-0">
             <aside className="flex-shrink-0 flex flex-col gap-4 w-full lg:w-[320px]">
                 <div className="text-sm text-slate-600">
-                    Current user: {session.user?.name ?? 'unknown'}{' '}
-                    {isLoading ? '⏳' : '🟢'}
+                    Current user: {username} {isLoading ? '⏳' : '🟢'}
                 </div>
 
                 <div>
@@ -128,6 +107,7 @@ export function Editor() {
                                         setFilenames([]);
                                         setSelectedFilename('');
                                         setFile('');
+                                        setNeedUpdate(true);
                                     }}
                                 />
                                 <span>{bucket}</span>
@@ -158,6 +138,7 @@ export function Editor() {
                                     onChange={() => {
                                         setSelectedFilename(filename);
                                         setFile('');
+                                        setNeedUpdate(true);
                                     }}
                                 />
                                 <span>{filename}</span>
