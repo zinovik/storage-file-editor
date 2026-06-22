@@ -4,7 +4,6 @@ export const users = [
         allowedBuckets: [
             'hedgehogs',
             'digital-board-games',
-            'zinovik-gallery',
             'board-games-list',
         ],
     },
