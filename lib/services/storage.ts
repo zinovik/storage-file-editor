@@ -1,6 +1,6 @@
 import { Storage } from '@google-cloud/storage';
 
-const PUBLIC_BUCKETS = ['digital-board-games', 'board-games-list'];
+const PUBLIC_BUCKETS = ['digital-board-games', 'board-games-list', 'boardgamegeek-bg-ranks-data-dump'];
 const SORTED_FILES = ['digital-board-games.json'];
 
 const storage = new Storage({

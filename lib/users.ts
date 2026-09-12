@@ -5,6 +5,7 @@ export const users = [
             'hedgehogs',
             'digital-board-games',
             'board-games-list',
+            'boardgamegeek-bg-ranks-data-dump',
         ],
     },
     {
