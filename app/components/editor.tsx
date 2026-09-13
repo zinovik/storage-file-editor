@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 
 type FileResponse = {
     buckets: string[];
@@ -24,6 +24,7 @@ export function Editor({ username }: { username: string }) {
     const [selectedBucket, setSelectedBucket] = useState('');
     const [selectedFilename, setSelectedFilename] = useState('');
     const [needUpdate, setNeedUpdate] = useState(true);
+    const fileInputRef = useRef<HTMLInputElement | null>(null);
 
     useEffect(() => {
         const updateState = async () => {
@@ -56,7 +57,7 @@ export function Editor({ username }: { username: string }) {
         };
 
         updateState();
-    }, [needUpdate]);
+    }, [needUpdate, selectedBucket, selectedFilename]);
 
     const saveFile = async () => {
         setIsLoading(true);
@@ -74,6 +75,24 @@ export function Editor({ username }: { username: string }) {
         setIsLoading(false);
 
         alert(data.message);
+    };
+
+    const uploadLocalFile = async (event: ChangeEvent<HTMLInputElement>) => {
+        const selectedFile = event.target.files?.[0];
+
+        if (!selectedFile) return;
+
+        try {
+            const fileContent = await selectedFile.text();
+            setFile(formatFile(fileContent));
+            alert(
+                `Loaded ${selectedFile.name}. Click Save to replace the current file.`
+            );
+        } catch {
+            alert('Could not read the selected file. Please try another one.');
+        } finally {
+            event.target.value = '';
+        }
     };
 
     return (
@@ -147,14 +166,33 @@ export function Editor({ username }: { username: string }) {
                     </fieldset>
                 </div>
 
-                <button
-                    type="button"
-                    className="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-900 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
-                    onClick={saveFile}
-                    disabled={isLoading}
-                >
-                    Save
-                </button>
+                <div className="flex gap-2">
+                    <button
+                        type="button"
+                        className="flex-1 rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-900 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
+                        onClick={() => fileInputRef.current?.click()}
+                        disabled={isLoading}
+                    >
+                        Upload file
+                    </button>
+
+                    <button
+                        type="button"
+                        className="flex-1 rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-900 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
+                        onClick={saveFile}
+                        disabled={isLoading}
+                    >
+                        Save
+                    </button>
+                </div>
+
+                <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept=".json,.csv,.txt,text/json,text/csv,text/plain"
+                    className="hidden"
+                    onChange={uploadLocalFile}
+                />
             </aside>
 
             <div className="flex-1 min-h-0">
