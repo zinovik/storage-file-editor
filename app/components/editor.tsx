@@ -28,6 +28,8 @@ export function Editor({ username }: { username: string }) {
 
     useEffect(() => {
         const updateState = async () => {
+            if (!needUpdate) return;
+
             setNeedUpdate(false);
 
             setIsLoading(true);
